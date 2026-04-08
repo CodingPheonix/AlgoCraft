@@ -1,6 +1,6 @@
 "use server"
 
-import { Algovisuals, Comments, Subtopic, Topics, Tutorials } from "../mongodb/mongo_schema"
+import { Subtopic, Comments, Tutorials } from "../mongodb/mongo_schema"
 import { Mixed } from "../../types"
 
 export const insertTopic = async ({ id, title, content, subtopic_tableId }: { id: string, title?: string, content?: Mixed[], subtopic_tableId: string }) => {
@@ -14,12 +14,18 @@ export const insertTopic = async ({ id, title, content, subtopic_tableId }: { id
         //         subtopic_tableId
         //     })
 
-        await Topics.create({
-            _id: id,
-            title: title || 'Untitled',
-            content: content?.toString() || null,
-            subtopicId: subtopic_tableId
-        })
+        await Subtopic.updateOne(
+            { _id: subtopic_tableId },
+            {
+                $push: {
+                    topics: {
+                        _id: id,
+                        title: title || 'Untitled',
+                        content: content?.toString() || null
+                    }
+                }
+            }
+        )
     } catch (error) {
         console.error("Error inserting topic:", error);
         throw error;
@@ -33,7 +39,8 @@ export const fetchTopics = async (id: string) => {
         //     .from(topicstable)
         //     .where(eq(topicstable.id, id))
 
-        return await Topics.findOne({ subtopicId: id }).lean()
+        const subtopic = await Subtopic.findOne({ _id: id }).lean()
+        return subtopic?.topics
 
     } catch (error) {
         console.error("Error fetching topics:", error);
@@ -51,7 +58,11 @@ export const editTopic = async (id: string, value: string) => {
         //     })
         //     .where(eq(topicstable.id, id))
 
-        await Topics.updateOne({ _id: id }, { $set: { title: value } })
+        // Find subtopic containing this topic and update it
+        await Subtopic.updateOne(
+            { "topics._id": id },
+            { $set: { "topics.$.title": value } }
+        )
     } catch (error) {
         console.error(error)
     }
@@ -67,7 +78,11 @@ export const addTopicContent = async (subtopicId: string, title?: string | "unti
         //     })
         //     .where(eq(topicstable.id, topicId))
 
-        await Topics.updateOne({ subtopicId }, { $set: { title: title, content: JSON.stringify(content) } })
+        // Find subtopic and update the embedded topic with matching subtopicId
+        await Subtopic.updateOne(
+            { _id: subtopicId, "topics._id": { $exists: true } },
+            { $set: { "topics.$.title": title, "topics.$.content": JSON.stringify(content) } }
+        )
     } catch (error) {
         console.error("Error fetching topics:", error);
         throw error;
@@ -79,27 +94,29 @@ export const deleteTopic = async (topicId: string) => {
     //     .select({ subtopicId: tutorialSubtopicsTable.subtopicId })
     //     .from(tutorialSubtopicsTable)
     //     .where(eq(tutorialSubtopicsTable.tutorialId, topicId));
+    // Delete tutorial and all its related data
     const subtopics = await Subtopic.find({ tutorialId: topicId }).lean()
 
-    const subtopicIds = subtopics.map((s: any) => s.id)
+    const subtopicIds = subtopics.map((s: any) => s._id)
 
-    if (subtopicIds.length > 0) {
-        await Algovisuals.deleteMany({ subtopicId: { $in: subtopicIds } })
+    // Get all topic IDs from within subtopics for comment deletion
+    const topicIds: string[] = []
+    for (const subtopic of subtopics) {
+        if (subtopic.topics && Array.isArray(subtopic.topics)) {
+            topicIds.push(...subtopic.topics.map((t: any) => t._id))
+        }
     }
 
-    if (subtopicIds.length > 0) {
-        await Subtopic.deleteMany({ _id: { $in: subtopicIds } })
-    }
-
-    const topics = await Topics.find({ subtopicId: { $in: subtopicIds } }).lean()
-
-    const topicIds = topics.map((t: any) => t.id)
-
+    // Delete comments associated with these topics
     if (topicIds.length > 0) {
         await Comments.deleteMany({ topicId: { $in: topicIds } })
     }
 
-    await Topics.deleteMany({ subtopicId: { $in: subtopicIds } })
+    // Delete all subtopics (includes cascading delete of embedded algovisuals and topics)
+    if (subtopicIds.length > 0) {
+        await Subtopic.deleteMany({ _id: { $in: subtopicIds } })
+    }
 
+    // Delete the tutorial itself
     await Tutorials.deleteOne({ _id: topicId })
 };

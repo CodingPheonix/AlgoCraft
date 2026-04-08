@@ -1,7 +1,7 @@
 'use server'
 
 import { Problem } from "@/app/admin/problem/page";
-import { Set, Problem as ProblemModel, ProblemDescription, ProblemVisuals } from "../mongodb/mongo_schema"
+import { Set, Problem as ProblemModel } from "../mongodb/mongo_schema"
 
 
 export const insertProblem = async (problem: Problem, authorId: string, setId: string) => {
@@ -188,23 +188,17 @@ export const fetchAllSetProblemWithSolutionAndAnimations = async () => {
         return await Promise.all(
             sets.map(async (set: any) => {
                 const problems = await ProblemModel.find({ setId: set._id }).lean()
-                const problemsWithDetails = await Promise.all(
-                    problems.map(async (problem: any) => {
-                        const description = await ProblemDescription.findOne({ problemId: problem._id }).lean()
-                        const visuals = await ProblemVisuals.findOne({ problemId: problem._id }).lean()
-                        return {
-                            id: problem._id,
-                            title: problem.name,
-                            link: problem.link,
-                            video: problem.video_link,
-                            difficulty: problem.difficulty,
-                            hints: problem.hints,
-                            descriptionId: description?._id || null,
-                            visualsId: visuals?._id || null,
-                            status: false
-                        }
-                    })
-                )
+                const problemsWithDetails = problems.map((problem: any) => ({
+                    id: problem._id,
+                    title: problem.name,
+                    link: problem.link,
+                    video: problem.video_link,
+                    difficulty: problem.difficulty,
+                    hints: problem.hints,
+                    descriptionId: problem.description ? problem._id + '_desc' : null,
+                    visualsId: problem.visuals ? problem._id + '_visuals' : null,
+                    status: false
+                }))
                 return {
                     id: set._id,
                     title: set.name,

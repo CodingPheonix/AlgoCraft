@@ -1,8 +1,7 @@
 'use server'
 
 import { VisualizerAction } from "@/app/admin/visual/create/tools"
-import { v4 as UUIDv4 } from "uuid"
-import { Algovisuals } from "../mongodb/mongo_schema"
+import { Subtopic } from "../mongodb/mongo_schema"
 
 export const insertVisuals = async ({ subTopicId, code, codeSteps, inputValues }: {
     subTopicId: string,
@@ -21,13 +20,18 @@ export const insertVisuals = async ({ subTopicId, code, codeSteps, inputValues }
         //         input_array: inputValues
         //     })
 
-        await Algovisuals.create({
-            _id: UUIDv4(),
-            subtopicId: subTopicId,
-            code_text: code,
-            code_steps: JSON.stringify(codeSteps),
-            input_array: inputValues
-        })
+        await Subtopic.updateOne(
+            { _id: subTopicId },
+            {
+                $set: {
+                    algovisuals: {
+                        code_text: code,
+                        code_steps: JSON.stringify(codeSteps),
+                        input_array: inputValues
+                    }
+                }
+            }
+        )
     } catch (error) {
         console.error(error)
     }
@@ -44,12 +48,13 @@ export const fetchVisuals = async (subTopicId: string) => {
         //     .from(algoVisualsTable)
         //     .where(eq(algoVisualsTable.subtopic_id, subTopicId))
 
-        const ans = await Algovisuals.findOne({ subtopicId: subTopicId }).lean()
+        const subtopic = await Subtopic.findOne({ _id: subTopicId }).lean()
+        const algoviz = subtopic?.algovisuals
 
         return {
-            code: ans?.code_text,
-            steps: ans?.code_steps,
-            inputArray: ans?.input_array
+            code: algoviz?.code_text,
+            steps: algoviz?.code_steps,
+            inputArray: algoviz?.input_array
         }
     } catch (error) {
         console.error(error)

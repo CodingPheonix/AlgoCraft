@@ -1,8 +1,7 @@
 'use server'
 
-import { v4 } from "uuid"
 import { TutorialBlock } from "@/app/components/TextEditor"
-import { ProblemDescription } from "../mongodb/mongo_schema"
+import { Problem } from "../mongodb/mongo_schema"
 
 
 export const insertProblemDescription = async (title: string, content: TutorialBlock[], problemId: string) => {
@@ -16,12 +15,17 @@ export const insertProblemDescription = async (title: string, content: TutorialB
         //         problem_id: problemId
         //     })
 
-        await ProblemDescription.create({
-            _id: v4(),
-            problemId,
-            title,
-            content: JSON.stringify(content)
-        })
+        await Problem.updateOne(
+            { _id: problemId },
+            {
+                $set: {
+                    description: {
+                        title,
+                        content: JSON.stringify(content)
+                    }
+                }
+            }
+        )
     } catch (error) {
         console.error(error)
     }
@@ -34,7 +38,8 @@ export const fetchProblemDescription = async (problemId: string) => {
         //     .from(problemDescriptionTable)
         //     .where(eq(problemDescriptionTable.problem_id, problemId))
 
-        return await ProblemDescription.findOne({ problemId }).lean()
+        const problem = await Problem.findOne({ _id: problemId }).lean()
+        return problem?.description
     } catch (error) {
         console.error(error)
     }
@@ -54,7 +59,10 @@ export const updateProblemDescription = async (
         //     })
         //     .where(eq(problemDescriptionTable.problem_id, problemId));
 
-        await ProblemDescription.updateOne({ problemId }, { $set: { title, content: JSON.stringify(content) } })
+        await Problem.updateOne(
+            { _id: problemId },
+            { $set: { description: { title, content: JSON.stringify(content) } } }
+        )
     } catch (error) {
         console.error(error);
     }
@@ -66,7 +74,7 @@ export const deleteProblemDescription = async (problemId: string) => {
         //     .delete(problemDescriptionTable)
         //     .where(eq(problemDescriptionTable.problem_id, problemId));
 
-        await ProblemDescription.deleteOne({ problemId })
+        await Problem.updateOne({ _id: problemId }, { $unset: { description: "" } })
     } catch (error) {
         console.error(error);
     }
