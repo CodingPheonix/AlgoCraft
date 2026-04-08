@@ -7,7 +7,7 @@ import { BlockRenderer } from "@/app/components/BlockRenderer";
 import { Mixed } from "@/app/types";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { fetchTopics } from "@/app/db/operations/topics";
+import { fetchTopics } from "@/app/db/operations/subtopics";
 import { useUserContext } from "@/app/context/userContext";
 import { v4 as UUIDv4 } from "uuid";
 import { fetchComments, uploadComment } from "@/app/db/operations/comments";
