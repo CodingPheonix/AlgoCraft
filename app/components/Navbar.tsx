@@ -1,6 +1,7 @@
 'use client';
 
-import { Search, Flame, Youtube, Globe, LogIn, UserPlus } from "lucide-react";
+import { Search, Flame, Globe, LogIn, UserPlus } from "lucide-react";
+import { CiYoutube } from "react-icons/ci";
 import { useState } from "react";
 import Link from "next/link";
 import { useUserContext } from "../context/userContext";
@@ -72,7 +73,7 @@ const Navbar = () => {
                     </div>
 
                     <a href="https://www.youtube.com/@PCSGlobalPrivateLimited" className="p-2 text-muted-foreground hover:text-destructive transition-colors hover:text-red-500" title="YouTube">
-                        <Youtube size={18} />
+                        <CiYoutube size={18} />
                     </a>
                     <a href="https://www.pcsglobal.in/#/home" className="p-2 text-muted-foreground transition-colors hover:text-blue-500" title="Website">
                         <Globe size={18} />

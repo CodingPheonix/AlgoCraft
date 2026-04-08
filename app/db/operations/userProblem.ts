@@ -44,10 +44,9 @@ export const updateAddProblemStatus = async (userId: string, problemId: string) 
                 problemIds: problemArr
             })
         }
-        }
     } catch (error) {
-        console.error(error)
-    }
+    console.error(error)
+}
 }
 
 export const updateRemoveProblemStatus = async (userId: string, problemId: string) => {

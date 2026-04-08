@@ -12,8 +12,6 @@ import { Users } from "../db/mongodb/mongo_schema"
 await connect_to_mongo();
 
 export async function signup(state: FormState, formData: FormData) {
-
-
     // Validate form fields
     const validatedFields = SignupFormSchema.safeParse({
         username: formData.get('username'),
@@ -37,16 +35,6 @@ export async function signup(state: FormState, formData: FormData) {
 
 
     // check if user exists
-    // const existingUser = await db
-    //     .select()
-    //     .from(usersTable)
-    //     .where(or(eq(usersTable.email, email), eq(usersTable.username, username)))
-    //     .execute()
-
-    // const existingUser = await prisma.users_table.findUnique({
-    //     where: { "email": email}
-    // })
-
     const existingUser = await Users.findOne({
         email: email
     })
@@ -62,39 +50,18 @@ export async function signup(state: FormState, formData: FormData) {
         }
     }
 
-    const userId = uuidv4();
+    let userId = "";
 
     //   3. Insert the user into the database or call an Auth Library's API
     try {
-        // await db
-        //     .insert(usersTable)
-        //     .values({
-        //         id: userId,
-        //         username,
-        //         email,
-        //         password: hashedPassword,
-        //         dateJoined: new Date(Date.now())
-        //     })
-        //     .$returningId()
-        console.log("enter")
-
-        // const data = await prisma.users_table.create({
-        //     data: {
-        //         id: userId,
-        //         username,
-        //         email,
-        //         password: hashedPassword,
-        //         dateJoined: new Date(Date.now())
-        //     }
-        // })
-
         const data = await Users.create({
-            id: userId,
             username,
             email,
             password: hashedPassword,
             dateJoined: new Date(Date.now())
         })
+
+        userId = data._id.toString()
     } catch (error) {
         return {
             message: 'An error occurred while creating your account.',
@@ -135,21 +102,7 @@ export async function login(state: FormState, formData: FormData) {
 
 
     // check if user exists
-    // const existingUser = await db
-    //     .select()
-    //     .from(usersTable)
-    //     .where(or(eq(usersTable.email, email), eq(usersTable.password, hashedPassword)))
-    //     .execute()
-
-    // const existingUser = await prisma.users_table.findFirst({
-    //     where: {
-    //         email: email
-    //     }
-    // })
-
     const existingUser = await Users.findOne({ email })
-
-    console.log('Existing user:', existingUser)
 
     if (!existingUser) {
         return {

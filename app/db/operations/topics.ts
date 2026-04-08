@@ -1,7 +1,7 @@
 "use server"
 
 import { Algovisuals, Comments, Subtopic, Topics, Tutorials } from "../mongodb/mongo_schema"
-import { Mixed } from "../schema"
+import { Mixed } from "../../types"
 
 export const insertTopic = async ({ id, title, content, subtopic_tableId }: { id: string, title?: string, content?: Mixed[], subtopic_tableId: string }) => {
     try {

@@ -1,6 +1,9 @@
 'use server'
 
 import { Subtopic } from "../mongodb/mongo_schema"
+import { SubTopic } from "@/app/types"
+
+
 
 export const addSubTopic = async (subTopic: SubTopic, tutorialId: string) => {
     try {

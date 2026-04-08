@@ -183,35 +183,35 @@ export const fetchAllSetProblemWithSolutionAndAnimations = async () => {
 
         // return Array.from(setMap.values())
 
-        const sets = await prisma.set_table.findMany({
-            include: {
-                problem_table: {
-                    include: {
-                        problem_description: true,
-                        problem_visuals: true
-                    }
+        const sets = await Set.find().lean()
+
+        return await Promise.all(
+            sets.map(async (set: any) => {
+                const problems = await ProblemModel.find({ setId: set._id }).lean()
+                const problemsWithDetails = await Promise.all(
+                    problems.map(async (problem: any) => {
+                        const description = await ProblemDescription.findOne({ problemId: problem._id }).lean()
+                        const visuals = await ProblemVisuals.findOne({ problemId: problem._id }).lean()
+                        return {
+                            id: problem._id,
+                            title: problem.name,
+                            link: problem.link,
+                            video: problem.video_link,
+                            difficulty: problem.difficulty,
+                            hints: problem.hints,
+                            descriptionId: description?._id || null,
+                            visualsId: visuals?._id || null,
+                            status: false
+                        }
+                    })
+                )
+                return {
+                    id: set._id,
+                    title: set.name,
+                    problems: problemsWithDetails
                 }
-            }
-        });
-
-        // Transform to match your previous structure
-        const result = sets.map((set: { id: any; name: any; problem_table: any[]; }) => ({
-            id: set.id,
-            title: set.name,
-            problems: set.problem_table.map(problem => ({
-                id: problem.id,
-                title: problem.name,
-                link: problem.link,
-                video: problem.video_link,
-                difficulty: problem.difficulty,
-                hints: problem.hints,
-                descriptionId: problem.problem_description?.id || null,
-                visualsId: problem.problem_visuals?.id || null,
-                status: false
-            }))
-        }));
-
-        return result;
+            })
+        )
 
 
     } catch (error) {
