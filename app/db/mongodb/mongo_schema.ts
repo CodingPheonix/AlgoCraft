@@ -71,7 +71,6 @@ const user_problem_schema = new mongoose.Schema({
 
 // TUTORIALS
 const tutorials_schema = new mongoose.Schema({
-   //  id: { type: String, required: true },
     title: { type: String, required: true },
     type: { type: String, default: "algorithm" },
     authorId: { type: String, required: true },

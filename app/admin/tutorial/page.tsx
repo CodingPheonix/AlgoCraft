@@ -16,10 +16,9 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { fetchTutorials, fetchTutorialsWithSubtopic, insertTutorial, editTutorial } from "@/app/db/operations/tutorials";
-import { v4 as UUIDv4 } from "uuid";
 import { useUserContext } from "@/app/context/userContext";
-import { deleteTopic, insertTopic } from "@/app/db/operations/topics";
-import { addSubTopic, editSubTopic, remove_Subtopic } from "@/app/db/operations/subtopics";
+import { deleteTopic } from "@/app/db/operations/subtopics";
+import { addSubTopic, editSubTopic, insertTopic, remove_Subtopic } from "@/app/db/operations/subtopics";
 // import { addTutorialSubtopicsRelation, removeTutorialSubTopicRelation } from "@/app/db/operations/tutorialSubtopics";
 
 interface SubTopic {
@@ -44,8 +43,6 @@ export interface SubTopicFor {
   difficulty: "Easy" | "Normal" | "Hard"
   external_video: string
 }
-
-const generateId = () => UUIDv4();
 
 const ManageTopics = () => {
   const [topics, setTopics] = useState<Topic[]>([]);
@@ -74,26 +71,24 @@ const ManageTopics = () => {
   const userContext = useUserContext();
   const user = userContext.user
 
-  const addTopic = () => {
+  const addTopic = async () => {
     if (!newTopic.name.trim() || !newTopic.type) return;
 
-    const newId = generateId()
+    // const newId = generateId()
 
-    setTopics((prev) => [
-      ...prev,
-      { id: newId, name: newTopic.name.trim(), subtopics: [], expanded: true, type: newTopic.type },
-    ]);
-
-    console.log(newTopic)
-
-    insertTutorial({
-      id: newId,
+    const data = await insertTutorial({
       title: newTopic.name.trim(),
       authorId: user?.id || "",
       type: newTopic.type
     })
 
-    setNewTopic({name: "", type: "algorithm"});
+    setTopics((prev) => [
+      ...prev,
+      { id: data._id.toString(), name: newTopic.name.trim(), subtopics: [], expanded: true, type: newTopic.type },
+    ]);
+
+    console.log(newTopic)
+    setNewTopic({ name: "", type: "algorithm" });
   };
 
   const removeTopic = async (id: string) => {
@@ -169,8 +164,6 @@ const ManageTopics = () => {
       })
     );
 
-    console.log("hhhhhhhhhhhh")
-
     await editTutorial(editingId, editingValue.trim());
 
     setEditingId(null);
@@ -185,7 +178,15 @@ const ManageTopics = () => {
   const addSubtopic = async (topicId: string) => {
     if (!subTopicFor.newSubName.trim()) return;
 
-    const subtopicId = generateId();
+    const data = await addSubTopic({
+      id: "",
+      name: subTopicFor.newSubName.trim(),
+      description: subTopicFor.description.trim(),
+      difficulty: subTopicFor.difficulty,
+      external_video: subTopicFor.external_video.trim()
+    }, topicId);
+
+    if (!data) return;
 
     setTopics((prev) =>
       prev.map((t) =>
@@ -194,7 +195,7 @@ const ManageTopics = () => {
             ...t,
             expanded: true,
             subtopics: [...t.subtopics, {
-              id: subtopicId,
+              id: data.id,
               name: subTopicFor.newSubName.trim(),
               description: subTopicFor.description.trim(),
               difficulty: subTopicFor.difficulty,
@@ -207,21 +208,7 @@ const ManageTopics = () => {
 
     console.log(topicId)
 
-    await addSubTopic({
-      id: subtopicId,
-      name: subTopicFor.newSubName.trim(),
-      description: subTopicFor.description.trim(),
-      difficulty: subTopicFor.difficulty,
-      external_video: subTopicFor.external_video.trim()
-    }, topicId);
-
-    await insertTopic({
-      id: UUIDv4(),
-      title: subTopicFor.newSubName.trim(),
-      subtopic_tableId: subtopicId
-    })
-
-    // await addTutorialSubtopicsRelation(topicId, subtopicId);
+    await insertTopic({ tutorialId: topicId, subtopicId: data.id })
 
     setSubTopicFor({
       newSubName: "",
@@ -234,8 +221,7 @@ const ManageTopics = () => {
 
   const removeSubtopic = async (topicId: string, subId: string) => {
 
-    // await removeTutorialSubTopicRelation(subId);
-    await remove_Subtopic(subId);
+    await remove_Subtopic(subId, topicId);
 
     setTopics((prev) =>
       prev.map((t) =>
@@ -251,7 +237,7 @@ const ManageTopics = () => {
       if (!user?.id) return;
 
       const tutorials = await fetchTutorialsWithSubtopic(user?.id);
-console.log(tutorials)
+      console.log(tutorials)
 
       if (tutorials) setTopics(tutorials.map((t: { id: any; title: any; type: string; subtopics: { id: string; name: string; description: string | null; difficulty: string; external_video: string | null; }[]; }) => {
         return {
@@ -259,18 +245,18 @@ console.log(tutorials)
           name: t.title,
           type: t.type as "algorithm" | "data_structure",
           subtopics: t.subtopics ? t.subtopics.map((s: {
-              id: string,
-              name: string,
-              description: string | null,
-              difficulty: string,
-              external_video: string | null
-            }) => ({
-              id: s.id,
-              name: s.name,
-              description: s.description || "",
-              difficulty: (s.difficulty || "Easy") as "Easy" | "Normal" | "Hard",
-              external_video: s.external_video || ""
-            })) : [],
+            id: string,
+            name: string,
+            description: string | null,
+            difficulty: string,
+            external_video: string | null
+          }) => ({
+            id: s.id,
+            name: s.name,
+            description: s.description || "",
+            difficulty: (s.difficulty || "Easy") as "Easy" | "Normal" | "Hard",
+            external_video: s.external_video || ""
+          })) : [],
           expanded: false
         }
       }));
@@ -304,12 +290,17 @@ console.log(tutorials)
           <input
             value={newTopic.name}
             onChange={(e) => setNewTopic({ ...newTopic, name: e.target.value })}
-            onKeyDown={(e) => e.key === "Enter" && addTopic()}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault()
+                addTopic()
+              }
+            }}
             placeholder="New topic name..."
             className="flex-1 rounded-lg border border-blue-600 px-3 py-2.5 text-sm font-mono outline-none focus:ring-1 focus:ring-blue-500 transition-colors"
           />
 
-          <select value={newTopic.type} onChange={(e) => {setNewTopic({...newTopic, type: e.target.value as "algorithm" | "data_structure"})}} className="flex-1 rounded-lg border border-blue-600 px-3 py-2.5 text-sm font-mono outline-none focus:ring-1 focus:ring-blue-500 transition-colors">
+          <select value={newTopic.type} onChange={(e) => { setNewTopic({ ...newTopic, type: e.target.value as "algorithm" | "data_structure" }) }} className="flex-1 rounded-lg border border-blue-600 px-3 py-2.5 text-sm font-mono outline-none focus:ring-1 focus:ring-blue-500 transition-colors">
             <option className="text-sm font-mono" value="algorithm">Algorithm</option>
             <option className="text-sm font-mono" value="data_structure">Data Structure</option>
           </select>
@@ -337,9 +328,9 @@ console.log(tutorials)
 
         {/* Topics list */}
         <div className="space-y-3">
-          {topics.map((topic) => (
+          {topics.map((topic, index) => (
             <div
-              key={topic.id}
+              key={index}
               className="rounded-xl border border-blue-600 bg-card overflow-hidden"
             >
               {/* Topic header */}
@@ -596,6 +587,7 @@ console.log(tutorials)
 
                         <div className="flex justify-end gap-2 pt-2">
                           <button
+                          type="button"
                             onClick={() => addSubtopic(topic.id)}
                             disabled={!subTopicFor.newSubName.trim()}
                             className="p-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 disabled:opacity-40 transition-colors"

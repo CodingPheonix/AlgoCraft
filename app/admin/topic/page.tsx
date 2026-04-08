@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import { v4 as uuidv4 } from 'uuid';
 import { BlockEditor } from "@/app/components/BlockEditor";
-import { addTopicContent, fetchTopics } from "@/app/db/operations/topics";
+import { addTopicContent, fetchTopics } from "@/app/db/operations/subtopics";
 import { useSearchParams } from "next/navigation";
 import { toast, Toaster } from "sonner";
 
