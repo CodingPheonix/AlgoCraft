@@ -1,5 +1,5 @@
 
-import { Mixed } from "../db/schema";
+import { Mixed } from "../types";
 import CodeBlockViewer from "./CodeBlockViewer";
 
 export const BlockRenderer = ({ block }: { block: Mixed }) => {

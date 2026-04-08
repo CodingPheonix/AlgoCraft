@@ -3,7 +3,7 @@
 import TextEditor, { TutorialBlock } from '@/app/components/TextEditor'
 import { fetchProblemDescription, insertProblemDescription, updateProblemDescription } from '@/app/db/operations/problemDescription'
 import { fetchProblemHints, uploadHints } from '@/app/db/operations/problems'
-import { Mixed } from '@/app/db/schema'
+import { Mixed } from '../../../types'
 import { useSearchParams } from 'next/navigation'
 import React, { Suspense, useEffect, useState } from 'react'
 import { toast, Toaster } from 'sonner'

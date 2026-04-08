@@ -1,7 +1,8 @@
 'use client'
 
 import React, { useCallback, useState } from 'react'
-import { FileSpreadsheet, Play, Youtube } from 'lucide-react'
+import { FileSpreadsheet, Play } from 'lucide-react'
+import { CiYoutube } from "react-icons/ci";
 import { useRouter } from 'next/navigation';
 import { Toaster, toast } from 'sonner';
 
@@ -52,7 +53,7 @@ const AlgoCard = (item: CourseItem) => {
                     <Play className="w-4 h-4" />
                 </button>
                 <button onClick={() => { item.externalLink ? router.push(item.externalLink) : toast('No Link Available!') }} className=" text-black hover:text-red-500 px-3 py-2 rounded hover:cursor-pointer">
-                    <Youtube className="w-4 h-4" />
+                    <CiYoutube className="w-4 h-4" />
                 </button>
             </span>
         </div>
