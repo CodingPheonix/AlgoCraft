@@ -1,7 +1,15 @@
 'use server'
 
 import { Set, Problem } from "../mongodb/mongo_schema"
+import { ProblemSchema, SetWithProblems } from "./problems"
 // import type { Problem } from "@/app/admin/problem/page"
+
+type Set = {
+    _id: string
+    name: string
+    authorId: string
+    problemIds: string[]
+}
 
 
 export const insertSet = async (name: string, author_id: string, id?: string) => {
@@ -17,81 +25,38 @@ export const insertSet = async (name: string, author_id: string, id?: string) =>
 }
 
 export const fetchSetWithProblemsById = async (userId: string) => {
+    console.log("user id is", userId)
     try {
-        // const rows = await db
-        //     .select({
-        //         setId: setTable.id,
-        //         setName: setTable.name,
-        //         problemId: problemTable.id,
-        //         problemName: problemTable.name,
-        //         problemLink: problemTable.link,
-        //         problemDifficulty: problemTable.difficulty,
-        //         problemVideoLink: problemTable.video_link
-        //     })
-        //     .from(setTable)
-        //     .where(eq(setTable.author_id, userId))
-        //     .leftJoin(
-        //         setProblemTable,
-        //         eq(setProblemTable.set_id, setTable.id)
-        //     )
-        //     .leftJoin(
-        //         problemTable,
-        //         eq(problemTable.id, setProblemTable.problem_id)
-        //     );
-
-        // const setMap = new Map<
-        //     string,
-        //     {
-        //         id: string;
-        //         name: string;
-        //         problems: Problem[];
-        //     }
-        // >();
-
-        // for (const row of rows) {
-        //     if (!setMap.has(row.setId)) {
-        //         setMap.set(row.setId, {
-        //             id: row.setId,
-        //             name: row.setName,
-        //             problems: []
-        //         });
-        //     }
-
-        //     const set = setMap.get(row.setId);
-
-        //     if (row.problemId && set) {
-        //         set.problems.push({
-        //             id: row.problemId,
-        //             name: row.problemName as string,
-        //             link: row.problemLink as string,
-        //             difficulty: row.problemDifficulty as "Easy" | "Normal" | "Hard",
-        //             videoLink: row.problemVideoLink as string
-        //         });
-        //     }
-        // }
-
-        // return Array.from(setMap.values());
-
-
         const sets = await Set.find({ authorId: userId }).lean()
 
-        return await Promise.all(
-            sets.map(async (set: any) => {
-                const problems = await Problem.find({ setId: set.id }).lean()
+        console.log("sets are", sets)
+
+        const data = await Promise.all(
+            sets.map(async (set) => {
+                const problems = await Promise.all(
+                    (set.problemIds || []).map(async (id: string) => {
+                        const problem = await Problem.findById(id).lean() as ProblemSchema
+                        if (!problem) return null
+
+                        return {
+                            id: problem._id.toString(),
+                            name: problem.name,
+                            link: problem.link,
+                            difficulty: problem.difficulty as "Easy" | "Normal" | "Hard",
+                            videoLink: problem.video_link
+                        }
+                    })
+                )
+
                 return {
-                    id: set.id,
+                    id: set._id.toString(),
                     name: set.name,
-                    problems: problems.map((problem: any) => ({
-                        id: problem.id,
-                        name: problem.name,
-                        link: problem.link,
-                        difficulty: problem.difficulty as "Easy" | "Normal" | "Hard",
-                        videoLink: problem.video_link
-                    }))
+                    problems: problems
                 }
             })
         )
 
+        return data
     } catch (error) {
         throw error
     }

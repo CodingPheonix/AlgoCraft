@@ -57,7 +57,7 @@ const SetProblems = () => {
       isExpanded: true,
     };
 
-    insertSet(newSet.id, newSet.name, user.id);
+    insertSet(newSet.name, user.id);
 
     setSets((prev) => [...prev, newSet]);
     setFormState((prev) => ({
@@ -219,6 +219,8 @@ const SetProblems = () => {
   useEffect(() => {
     const fetchData = async () => {
       const data = await fetchSetWithProblemsById(user.id);
+
+      console.log(data)
 
       setSets(
         data.map((set: { id: any; name: any; problems: any[]; }) => ({

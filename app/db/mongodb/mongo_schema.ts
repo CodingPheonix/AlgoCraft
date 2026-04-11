@@ -53,8 +53,8 @@ const problem_schema = new mongoose.Schema({
     difficulty: { type: String, default: "Easy" },
     video_link: String,
 
-    visuals: problem_visuals_schema,
-    description: problem_description_schema,
+    visuals: {type: problem_visuals_schema, default: {}},
+    description: {type: problem_description_schema, default: {}},
 
     authorId: { type: String, required: true },
     setId: { type: String, required: true },
