@@ -13,9 +13,9 @@ const users_schema = new mongoose.Schema({
     role: { type: String, default: "user" },
     dateJoined: { type: Date },
 
-    problemIds: [String],
-    setIds: [String],
-    tutorialIds: [String],
+    problemIds: { type: [String], default: [] },
+    setIds: { type: [String], default: [] },
+    tutorialIds: { type: [String], default: [] },
 
     userProblemId: String
 });
@@ -25,7 +25,7 @@ const set_schema = new mongoose.Schema({
    //  id: { type: String, required: true },
     name: { type: String, required: true },
     authorId: { type: String, required: true },
-    problemIds: [String]
+    problemIds: { type: [String], default: [] }
 });
 
 // PROBLEM DESCRIPTIONS
@@ -59,14 +59,14 @@ const problem_schema = new mongoose.Schema({
     authorId: { type: String, required: true },
     setId: { type: String, required: true },
 
-    hints: [String],
+    hints: { type: [String], default: [] },
 });
 
 // USER PROBLEM (to track user progress on problems)
 const user_problem_schema = new mongoose.Schema({
    //  id: { type: String, required: true },
     userId: { type: String, required: true, unique: true },
-    problemIds: [String]
+    problemIds: { type: [String], default: [] }
 });
 
 // TUTORIALS
@@ -75,7 +75,7 @@ const tutorials_schema = new mongoose.Schema({
     type: { type: String, default: "algorithm" },
     authorId: { type: String, required: true },
 
-    subtopicIds: [String]
+    subtopicIds: { type: [String], default: [] }
 });
 
 // ALGOVISUALS
@@ -97,7 +97,7 @@ const topics_schema = new mongoose.Schema({
 
     subtopicId: { type: String, unique: true },
 
-    commentIds: [String]
+    commentIds: { type: [String], default: [] }
 });
 
 // SUBTOPICS
