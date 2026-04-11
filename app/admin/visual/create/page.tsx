@@ -162,15 +162,21 @@ const Visualizer = () => {
 
             if (!fetchData) return;
             setArrayInput(fetchData?.inputArray || "")
-            setTextValue(JSON.stringify(fetchData?.steps || []))
-            const parsed = JSON.parse(JSON.stringify(fetchData?.steps || {}));
+            setTextValue(fetchData?.steps)
+            // setTextValue(JSON.stringify(fetchData?.steps || []))
+            const parsed = JSON.parse(fetchData?.steps || {});
+            console.log("Fetched steps:", parsed)
+            // const parsed = JSON.parse(JSON.stringify(fetchData?.steps || {}));
             setAlgoSteps(parsed || []);
             setCode(fetchData?.code || "")
             syncArray(fetchData?.inputArray || "")
+
+            console.log(algoSteps)
         }
 
         fetchDetails()
     }, [subtopicId])
+
 
     const codeLines = code.split("\n");
 
