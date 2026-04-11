@@ -84,9 +84,9 @@ const algovisuals_schema = new mongoose.Schema({
 
     subtopicId: String,
 
-    code_text: { type: String, required: true },
-    code_steps: { type: String, required: true },
-    input_array: { type: String, required: true }
+    code_text: { type: String, required: true, default: "" },
+    code_steps: { type: String, required: true, default: "[]" },
+    input_array: { type: String, required: true, default: "[]" }
 });
 
 // TOPICS
