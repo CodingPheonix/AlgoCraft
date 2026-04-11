@@ -31,7 +31,7 @@ const set_schema = new mongoose.Schema({
 // PROBLEM DESCRIPTIONS
 const problem_description_schema = new mongoose.Schema({
    //  id: { type: String, required: true },
-    problemId: { type: String, required: true, unique: true },
+    problemId: { type: String, unique: true },
     title: String,
     content: String,
 });
@@ -39,10 +39,10 @@ const problem_description_schema = new mongoose.Schema({
 // PROBLEM VISUALS
 const problem_visuals_schema = new mongoose.Schema({
    //  id: { type: String, required: true },
-    problemId: { type: String, required: true, unique: true },
-    code_text: { type: String, required: true, default: "" },
-    code_steps: { type: String, required: true, default: "[]" },
-    input_array: { type: String, required: true,default: "[]" }
+    problemId: { type: String, unique: true },
+    code_text: { type: String, default: "" },
+    code_steps: { type: String, default: "[]" },
+    input_array: { type: String, default: "[]" }
 });
 
 // PROBLEMS
@@ -84,9 +84,9 @@ const algovisuals_schema = new mongoose.Schema({
 
     subtopicId: String,
 
-    code_text: { type: String, required: true, default: "" },
-    code_steps: { type: String, required: true, default: "[]" },
-    input_array: { type: String, required: true, default: "[]" }
+    code_text: { type: String, default: "" },
+    code_steps: { type: String, default: "[]" },
+    input_array: { type: String, default: "[]" }
 });
 
 // TOPICS
@@ -95,7 +95,7 @@ const topics_schema = new mongoose.Schema({
     title: String,
     content: String,
 
-    subtopicId: { type: String, unique: true },
+    subtopicId: { type: String},
 
     commentIds: { type: [String], default: [] }
 });

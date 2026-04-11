@@ -90,7 +90,11 @@ export const remove_Subtopic = async (subtopicId: string, tutorialId: string) =>
 export const fetchTopics = async (id: string) => {
     try {
         const subtopic = await Subtopic.findById(id).lean()
-        return subtopic?.topics
+        return {
+            title: subtopic?.topics?.title || "",
+            content: subtopic?.topics?.content || "",
+            subtopicId: subtopic?.topics?.subtopicId || ""
+        }
 
     } catch (error) {
         console.error("Error fetching topics:", error);
