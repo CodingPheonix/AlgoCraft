@@ -107,18 +107,28 @@ export const fetchAllTutorialsWithSubtopic = async () => {
 
         return await Promise.all(
             tutorials.map(async (tutorial: any) => {
-                const subtopics = await Subtopic.find({ tutorialId: tutorial.id }).lean()
+                const allSubtopics = tutorial.subtopicIds || [];
+
+                const subtopics = await Promise.all(
+                    allSubtopics.map(async (id: string) => {
+                        const sub = await Subtopic.findById(id).lean();
+                        return sub ? {
+                            id: sub._id.toString(),
+                            name: sub.name,
+                            description: sub.description,
+                            difficulty: sub.difficulty,
+                            external_video: sub.external_video
+                        } : null;
+                    })
+                );
+
+                // const subtopics = await Subtopic.find({ tutorialId: tutorial.id }).lean()
+                console.log(tutorial)
                 return {
                     id: tutorial._id.toString(),
                     title: tutorial.title,
                     type: tutorial.type,
-                    subtopics: subtopics.map(sub => ({
-                        id: sub._id.toString(),
-                        name: sub.name,
-                        description: sub.description,
-                        difficulty: sub.difficulty,
-                        external_video: sub.external_video
-                    }))
+                    subtopics: subtopics
                 }
             })
         )

@@ -17,6 +17,7 @@ type Subtopic = {
 
 const page = async () => {
     const topics: Topic[] = await fetchAllTutorialsWithSubtopic()
+    console.log(topics)
     return (
         <div>
             <Navbar />
