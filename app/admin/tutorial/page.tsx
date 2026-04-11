@@ -84,7 +84,7 @@ const ManageTopics = () => {
 
     setTopics((prev) => [
       ...prev,
-      { id: data._id.toString(), name: newTopic.name.trim(), subtopics: [], expanded: true, type: newTopic.type },
+      { id: data.id, name: newTopic.name.trim(), subtopics: [], expanded: true, type: newTopic.type },
     ]);
 
     console.log(newTopic)

@@ -108,8 +108,8 @@ const subtopic_schema = new mongoose.Schema({
     difficulty: { type: String, default: "Easy" },
     external_video: String,
 
-    topics: topics_schema,
-    algovisuals: algovisuals_schema,
+    topics: {type: topics_schema, default: {}},
+    algovisuals: {type: algovisuals_schema, default: {}},
 
     tutorialId: { type: String, required: true },
 });

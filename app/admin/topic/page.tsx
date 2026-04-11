@@ -131,7 +131,7 @@ const TopicPage = () => {
     const fetchTopicData = async () => {
       const data = await fetchTopics(subtopicId as string);
       console.log(data)
-      if (!data) return;
+      if (!data?.title) return;
       setTitle(data?.title as string || "Untitled Tutorial");
       setBlocks((JSON.parse(data?.content as unknown as string) as TutorialBlock[]) ?? [])
     }

@@ -20,7 +20,7 @@ export const addSubTopic = async (subTopic: SubTopic, tutorialId: string): Promi
             description: subTopic.description,
             difficulty: subTopic.difficulty,
             external_video: subTopic.external_video,
-            tutorialId
+            tutorialId,
         })
 
         return {
@@ -111,18 +111,32 @@ export const editTopic = async (id: string, value: string) => {
     }
 }
 
-export const addTopicContent = async (subtopicId: string, title?: string | "untitled", content?: Mixed[] | []) => {
+export const addTopicContent = async (
+    subtopicId: string,
+    title: string = "untitled",
+    content: any[] = []
+) => {
     try {
-        // Find subtopic and update the embedded topic with matching subtopicId
-        await Subtopic.updateOne(
-            { _id: subtopicId, "topics._id": { $exists: true } },
-            { $set: { "topics.$.title": title, "topics.$.content": JSON.stringify(content) } }
-        )
+        const updated = await Subtopic.findOneAndUpdate(
+            { _id: subtopicId },
+            {
+                $set: {
+                    "topics.title": title,
+                    "topics.content": JSON.stringify(content),
+                },
+            },
+            {
+                new: true,          // returns updated document
+                runValidators: true // ensures schema validation
+            }
+        );
+
+        // return updated;
     } catch (error) {
-        console.error("Error fetching topics:", error);
+        console.error("Error updating topic:", error);
         throw error;
     }
-}
+};
 
 export const deleteTopic = async (topicId: string) => {
     // Delete tutorial and all its related data

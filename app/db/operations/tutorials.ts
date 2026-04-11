@@ -4,11 +4,15 @@ import { Tutorials, Subtopic } from "../mongodb/mongo_schema"
 
 export const insertTutorial = async ({ title, authorId, type }: { id?: string, title: string, authorId: string, type: "algorithm" | "data_structure" }) => {
     try {
-        return await Tutorials.create({
+        const data = await Tutorials.create({
             title,
             authorId,
             type
         })
+
+        return {
+            id: data._id.toString() || ""
+        }
     } catch (error) {
         console.error("Error inserting tutorial:", error)
         throw error
