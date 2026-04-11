@@ -4,7 +4,7 @@ import { useState, Suspense } from "react";
 import { ArrowLeft, Code, MessageSquare, Send } from "lucide-react";
 import CodeBlockViewer from "@/app/components/CodeBlockViewer";
 import { BlockRenderer } from "@/app/components/BlockRenderer";
-import { Mixed } from "@/app/types";
+import { Mixed } from "@/app/utils/type";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { fetchTopics } from "@/app/db/operations/subtopics";

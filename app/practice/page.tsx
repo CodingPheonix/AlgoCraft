@@ -25,7 +25,7 @@ export type Problem = {
 
 const page = async () => {
   const isVerified = await verifySession().then((res) => res.isAuth)
-  const allProblems = await fetchAllSetProblemWithSolutionAndAnimations() as SetWithProblems[]
+  const allProblems = await fetchAllSetProblemWithSolutionAndAnimations() as unknown as SetWithProblems[]
 
   return (
     <Suspense fallback={<p>Loading...</p>}>

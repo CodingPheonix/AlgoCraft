@@ -2,7 +2,7 @@
 
 import mongoose from "mongoose"
 import { Comments, Subtopic, Tutorials } from "../mongodb/mongo_schema"
-import { Mixed, SubTopic } from "@/app/types"
+import { Mixed, SubTopic } from "@/app/utils/type"
 
 type AddSubTopicReturn = {
     id: string,

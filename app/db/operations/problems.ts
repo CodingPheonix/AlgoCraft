@@ -44,16 +44,8 @@ export const insertProblem = async (problem: Problem, authorId: string, setId: s
 
 export const fetchProblemHints = async (problemId: string) => {
     try {
-        // return await db
-        //     .select({
-        //         Hints: problemTable.hints
-        //     })
-        //     .from(problemTable)
-        //     .where(eq(problemTable.id, problemId))
-
         const res = await ProblemModel.findById(problemId).lean()
-
-        return res?.hints
+        return res?.hints as string[]
     } catch (error) {
         console.log(error)
     }
@@ -63,16 +55,6 @@ export const updateProblem = async (problem: Problem) => {
 
     console.log(problem)
     try {
-        // await db
-        //     .update(problemTable)
-        //     .set({
-        //         name: problem.name,
-        //         link: problem.link,
-        //         difficulty: problem.difficulty,
-        //         video_link: problem.videoLink,
-        //     })
-        //     .where(eq(problemTable.id, problem.id))
-
         await ProblemModel.updateOne({ _id: problem.id }, {
             $set: {
                 name: problem.name,
@@ -128,18 +110,6 @@ export const fetchAllSetProblemWithSolutionAndAnimations = async () => {
 
         const data: SetWithProblems[] = await Promise.all(
             sets.map(async (set, _) => {
-                // const problems = await ProblemModel.find({ setId: set._id }).lean()
-                // const problemsWithDetails = problems.map((problem: any) => ({
-                //     id: problem._id,
-                //     title: problem.name,
-                //     link: problem.link,
-                //     video: problem.video_link,
-                //     difficulty: problem.difficulty,
-                //     hints: problem.hints,
-                //     descriptionId: problem.description ? problem._id + '_desc' : null,
-                //     visualsId: problem.visuals ? problem._id + '_visuals' : null,
-                //     status: false
-                // }))
 
                 const problemsWithDetails = await Promise.all(
                     set.problemIds.map(async (id: string) => {

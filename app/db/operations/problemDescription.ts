@@ -33,13 +33,11 @@ export const insertProblemDescription = async (title: string, content: TutorialB
 
 export const fetchProblemDescription = async (problemId: string) => {
     try {
-        // return await db
-        //     .select()
-        //     .from(problemDescriptionTable)
-        //     .where(eq(problemDescriptionTable.problem_id, problemId))
-
         const problem = await Problem.findOne({ _id: problemId }).lean()
-        return problem?.description
+        return {
+            title: problem?.description?.title,
+            content: problem?.description?.content
+        }
     } catch (error) {
         console.error(error)
     }
@@ -51,13 +49,6 @@ export const updateProblemDescription = async (
     content: TutorialBlock[]
 ) => {
     try {
-        // await db
-        //     .update(problemDescriptionTable)
-        //     .set({
-        //         title,
-        //         content
-        //     })
-        //     .where(eq(problemDescriptionTable.problem_id, problemId));
 
         await Problem.updateOne(
             { _id: problemId },

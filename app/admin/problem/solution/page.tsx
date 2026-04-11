@@ -3,7 +3,7 @@
 import TextEditor, { TutorialBlock } from '@/app/components/TextEditor'
 import { fetchProblemDescription, insertProblemDescription, updateProblemDescription } from '@/app/db/operations/problemDescription'
 import { fetchProblemHints, uploadHints } from '@/app/db/operations/problems'
-import { Mixed } from '../../../types'
+import { Mixed } from '@/app/utils/type'
 import { useSearchParams } from 'next/navigation'
 import React, { Suspense, useEffect, useState } from 'react'
 import { toast, Toaster } from 'sonner'
@@ -46,10 +46,25 @@ const ProblemDescription = () => {
 
             const [blocks, problem] = await Promise.all([fetchProblemDescription(problem_id), fetchProblemHints(problem_id)]);
 
+            console.log(blocks, problem)
+
             blocks && setprevBlocks(blocks?.content ? JSON.parse(blocks.content) : []);
-            // problem && JSON.parse(problem as string[]).map((hint, index) => {
-            //     setHints(prev => ({ ...prev, [`hint${index + 1}` as HintKeys]: hint }));
-            // }) 
+
+            if (problem) {
+                let parsedHints: unknown = problem;
+                if (typeof problem === "string") {
+                    try {
+                        parsedHints = JSON.parse(problem);
+                    } catch (error) {
+                        parsedHints = [];
+                    }
+                }
+
+                const hintsArray = Array.isArray(parsedHints) ? (parsedHints as string[]) : [];
+                hintsArray.forEach((hint, index) => {
+                    setHints(prev => ({ ...prev, [`hint${index + 1}` as HintKeys]: hint }));
+                });
+            }
         }
         fetchBlocks()
     }, [problem_id])
