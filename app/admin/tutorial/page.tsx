@@ -277,7 +277,7 @@ const ManageTopics = () => {
             className="flex items-center gap-2 hover:text-blue-400 transition-colors"
           >
             <ArrowLeft size={18} />
-            <span className="text-sm font-mono">Back</span>
+            <span className="text-sm font-mono md:block hidden">Back</span>
           </button>
           <h1 className="text-sm font-mono font-bold">Manage Topics</h1>
           <div className="w-16" />
@@ -286,7 +286,7 @@ const ManageTopics = () => {
 
       <div className="container mx-auto max-w-2xl px-4 py-8">
         {/* Add topic input */}
-        <div className="mb-8 flex gap-2">
+        <div className="mb-8 flex md:flex-row flex-col gap-2">
           <input
             value={newTopic.name}
             onChange={(e) => setNewTopic({ ...newTopic, name: e.target.value })}

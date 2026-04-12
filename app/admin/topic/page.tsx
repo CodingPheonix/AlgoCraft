@@ -148,7 +148,7 @@ const TopicPage = () => {
         <div className="container mx-auto flex h-14 items-center justify-between px-4">
           <button onClick={() => { window.history.back() }} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft size={18} />
-            <span className="text-sm font-mono">Back</span>
+            <span className="text-sm font-mono md:block hidden">Back</span>
           </button>
           <div className="flex items-center gap-2">
             <button
@@ -269,7 +269,7 @@ const TopicPage = () => {
         {showAddMenu && (
           <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm" onClick={() => setShowAddMenu(false)}>
             <div
-              className="w-full max-w-sm rounded-xl border border-border bg-card p-4 shadow-2xl"
+              className="w-full max-w-sm rounded-xl border border-border bg-card p-4 m-2 shadow-2xl"
               onClick={(e) => e.stopPropagation()}>
               <p className="text-xs font-mono text-muted-foreground mb-3">Choose a block type</p>
               <div className="space-y-1">
