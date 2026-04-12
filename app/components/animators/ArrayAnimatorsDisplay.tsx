@@ -169,10 +169,10 @@ const ArrayAnimatorsDisplay: React.FC<ArrayAnimatorsProps> = ({ topic, prevData 
                 <div className="container mx-auto flex h-14 items-center justify-between px-4">
                     <button onClick={() => {window.history.back()}} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
                         <ArrowLeft size={18} />
-                        <span className="text-sm font-mono">Back</span>
+                        <span className="text-sm font-mono md:block hidden">Back</span>
                     </button>
-                    <h1 className="text-sm font-mono font-bold text-foreground">{topic} Visualizer</h1>
-                    <div className="w-20" />
+                    <h1 className="text-sm font-mono font-bold text-foreground px-3">{topic} Visualizer</h1>
+                    <div className="md:w-20" />
                 </div>
             </div>
 
@@ -204,7 +204,7 @@ const ArrayAnimatorsDisplay: React.FC<ArrayAnimatorsProps> = ({ topic, prevData 
                                 readOnly
                                 spellCheck={false}
                                 placeholder="Your code here..."
-                                className="flex-1 bg-transparent p-3 text-[12px] font-mono text-foreground leading-5 resize-none outline-none placeholder:text-muted-foreground"
+                                className="flex-1 bg-transparent p-3 text-[12px] font-mono text-foreground leading-5 resize-none outline-none placeholder:text-muted-foreground overflow-x-scroll"
                                 rows={codeLines.length + 2}
                             />
                         </div>
