@@ -30,16 +30,12 @@ const set_schema = new mongoose.Schema({
 
 // PROBLEM DESCRIPTIONS
 const problem_description_schema = new mongoose.Schema({
-   //  id: { type: String, required: true },
-    problemId: { type: String, unique: true },
-    title: String,
-    content: String,
+    title: { type: String, default: "" },
+    content: { type: String, default: "" },
 });
 
 // PROBLEM VISUALS
 const problem_visuals_schema = new mongoose.Schema({
-   //  id: { type: String, required: true },
-    problemId: { type: String, unique: true },
     code_text: { type: String, default: "" },
     code_steps: { type: String, default: "[]" },
     input_array: { type: String, default: "[]" }
@@ -52,7 +48,6 @@ const problem_schema = new mongoose.Schema({
     link: { type: String, required: true },
     difficulty: { type: String, default: "Easy" },
     video_link: String,
-
     visuals: {type: problem_visuals_schema, default: {}},
     description: {type: problem_description_schema, default: {}},
 
