@@ -29,15 +29,7 @@ const HintPopup: React.FC<HintPopupProps> = ({ hints, onClose }) => {
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
             <div
                 ref={popupRef}
-                className="
-          bg-white
-          rounded-2xl
-          shadow-xl
-          w-[40vw]
-          max-h-[300px]
-          p-6
-          flex flex-col
-        "
+                className="bg-white rounded-2xl shadow-xl md:w-[40vw] w-[80vw] max-h-75 p-6 flex flex-col"
             >
                 <h3 className="text-lg font-semibold mb-3 text-gray-800">
                     💡 Hints

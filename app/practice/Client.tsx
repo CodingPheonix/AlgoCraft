@@ -11,7 +11,7 @@ import HintPopup from "../components/HintPopup";
 
 const ProblemSections = ({ allProblems, isVerified }: { allProblems: SetWithProblems[], isVerified: boolean }) => {
     const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>(
-        () => Object.fromEntries(allProblems.map((s) => [s.id, true]))
+        () => allProblems.length > 0 ? Object.fromEntries(allProblems.map((s) => [s.id, true])) : {}
     );
     const [open, setOpen] = useState(false);
     const [problemStatusList, setProblemStatusList] = useState<string[]>([]);
@@ -157,7 +157,7 @@ const ProblemSections = ({ allProblems, isVerified }: { allProblems: SetWithProb
                                     </span>
                                 </div>
                                 <div className="flex items-center gap-3">
-                                    <div className="w-32 h-1.5 rounded-full bg-muted overflow-hidden">
+                                    <div className="w-32 h-1.5 rounded-full bg-muted overflow-hidden md:block hidden">
                                         <div
                                             className="h-full rounded-full bg-blue-500 transition-all duration-300"
                                             style={{ width: total > 0 ? `${(completed / total) * 100}%` : "0%" }}
@@ -174,7 +174,7 @@ const ProblemSections = ({ allProblems, isVerified }: { allProblems: SetWithProb
                                 <div className="overflow-x-auto">
                                     <table className="w-full text-sm">
                                         <thead>
-                                            <tr className="border-b border-border bg-blue-100">
+                                            <tr className="border-b border-border bg-blue-100 ">
                                                 <th className="text-left px-6 py-3 font-medium text-muted-foreground w-10">#</th>
                                                 <th className="text-left px-4 py-3 font-medium text-muted-foreground">Problem</th>
                                                 <th className="text-left px-4 py-3 font-medium text-muted-foreground w-24">Difficulty</th>
@@ -184,7 +184,6 @@ const ProblemSections = ({ allProblems, isVerified }: { allProblems: SetWithProb
                                         </thead>
                                         <tbody>
                                             {section.problems.map((problem, idx) => {
-                                                console.log(problem)
                                                 return (
                                                     <tr
                                                         key={problem.id}
@@ -216,7 +215,7 @@ const ProblemSections = ({ allProblems, isVerified }: { allProblems: SetWithProb
                                                                     <FileText className="h-3.5 w-3.5 shrink-0" />
                                                                     Solution
                                                                 </button>
-                                                                <div className="w-[85px] flex justify-center">
+                                                                <div className="w-21.25 flex justify-center">
                                                                     {problem.video ? (
                                                                         <a
                                                                             href={problem.video}
@@ -231,7 +230,7 @@ const ProblemSections = ({ allProblems, isVerified }: { allProblems: SetWithProb
                                                                         <span className="w-full" />
                                                                     )}
                                                                 </div>
-                                                                <div className="w-[85px] flex justify-center">
+                                                                <div className="w-21.25 flex justify-center">
                                                                     {problem.visualsId ? (
                                                                         <button
                                                                             onClick={() => router.push(`practice/a?id=${problem.id}`)}
@@ -246,7 +245,7 @@ const ProblemSections = ({ allProblems, isVerified }: { allProblems: SetWithProb
                                                                 </div>
                                                                 <button
                                                                     onClick={() => { showHints(problem.hints as string[]) }}
-                                                                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-input bg-background text-xs font-medium hover:bg-muted transition-colors w-[85px] justify-center hover:bg-slate-100"
+                                                                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-input bg-background text-xs font-medium hover:bg-muted transition-colors w-21.25 justify-center hover:bg-slate-100"
                                                                 >
                                                                     <StickyNote className="h-3.5 w-3.5 shrink-0" />
                                                                     Hints
