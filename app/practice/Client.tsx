@@ -8,54 +8,6 @@ import { SetWithProblems } from "./page";
 import { useUserContext } from "../context/userContext";
 import { fetchAllProblemStatus, updateAddProblemStatus, updateRemoveProblemStatus } from "../db/operations/userProblem";
 import HintPopup from "../components/HintPopup";
-import { verifySession } from "../lib/dal";
-
-type Status = "not_started" | "in_progress" | "completed";
-
-// interface Problem {
-//     id: string;
-//     name: string;
-//     link: string;
-//     difficulty: "Easy" | "Medium" | "Hard";
-//     videoLink: string;
-// }
-
-// interface ProblemSection {
-//     id: string;
-//     name: string;
-//     problems: Problem[];
-// }
-
-// const dummySections: ProblemSection[] = [
-//     {
-//         id: "1",
-//         name: "Arrays",
-//         problems: [
-//             { id: "p1", name: "Two Sum", link: "https://leetcode.com/problems/two-sum", difficulty: "Easy", videoLink: "https://youtube.com/watch?v=example1" },
-//             { id: "p2", name: "Best Time to Buy and Sell Stock", link: "https://leetcode.com/problems/best-time-to-buy-and-sell-stock", difficulty: "Easy", videoLink: "https://youtube.com/watch?v=example2" },
-//             { id: "p3", name: "Product of Array Except Self", link: "https://leetcode.com/problems/product-of-array-except-self", difficulty: "Medium", videoLink: "" },
-//             { id: "p4", name: "Maximum Subarray", link: "https://leetcode.com/problems/maximum-subarray", difficulty: "Medium", videoLink: "https://youtube.com/watch?v=example4" },
-//         ],
-//     },
-//     {
-//         id: "2",
-//         name: "Linked Lists",
-//         problems: [
-//             { id: "p5", name: "Reverse Linked List", link: "https://leetcode.com/problems/reverse-linked-list", difficulty: "Easy", videoLink: "https://youtube.com/watch?v=example5" },
-//             { id: "p6", name: "Merge Two Sorted Lists", link: "https://leetcode.com/problems/merge-two-sorted-lists", difficulty: "Easy", videoLink: "" },
-//             { id: "p7", name: "LRU Cache", link: "https://leetcode.com/problems/lru-cache", difficulty: "Hard", videoLink: "https://youtube.com/watch?v=example7" },
-//         ],
-//     },
-//     {
-//         id: "3",
-//         name: "Trees",
-//         problems: [
-//             { id: "p8", name: "Binary Tree Inorder Traversal", link: "https://leetcode.com/problems/binary-tree-inorder-traversal", difficulty: "Easy", videoLink: "https://youtube.com/watch?v=example8" },
-//             { id: "p9", name: "Validate Binary Search Tree", link: "https://leetcode.com/problems/validate-binary-search-tree", difficulty: "Medium", videoLink: "" },
-//             { id: "p10", name: "Binary Tree Maximum Path Sum", link: "https://leetcode.com/problems/binary-tree-maximum-path-sum", difficulty: "Hard", videoLink: "https://youtube.com/watch?v=example10" },
-//         ],
-//     },
-// ];
 
 const ProblemSections = ({ allProblems, isVerified }: { allProblems: SetWithProblems[], isVerified: boolean }) => {
     const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>(

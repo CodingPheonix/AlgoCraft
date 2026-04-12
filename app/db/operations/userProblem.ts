@@ -34,12 +34,14 @@ export const updateAddProblemStatus = async (userId: string, problemId: string) 
                 ? current
                 : [...current, problemId]
 
-            await UserProblem.updateOne({ _id: existingSet._id }, { $set: { problemIds: updated } })
+            await UserProblem.findOneAndUpdate(
+                { _id: existingSet._id },
+                { $set: { problemIds: updated } }
+            )
         } else {
             const problemArr = [problemId]
 
             await UserProblem.create({
-                _id: v4(),
                 userId,
                 problemIds: problemArr
             })
@@ -51,11 +53,6 @@ export const updateAddProblemStatus = async (userId: string, problemId: string) 
 
 export const updateRemoveProblemStatus = async (userId: string, problemId: string) => {
     try {
-        // const existingSet = await db
-        //     .select()
-        //     .from(userProblemTable)
-        //     .where(eq(userProblemTable.user_id, userId))
-
         const existingSet = await UserProblem.findOne({ userId }).lean()
 
         if (!existingSet?.id) return
@@ -64,7 +61,10 @@ export const updateRemoveProblemStatus = async (userId: string, problemId: strin
 
         const updated = current.filter(id => id !== problemId)
 
-        await UserProblem.updateOne({ _id: existingSet._id }, { $set: { problemIds: updated } })
+        await UserProblem.findOneAndUpdate(
+            { _id: existingSet._id },
+            { $set: { problemIds: updated } }
+        )
     } catch (error) {
         console.error(error)
     }

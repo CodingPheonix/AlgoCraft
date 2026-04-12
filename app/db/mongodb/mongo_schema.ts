@@ -64,7 +64,6 @@ const problem_schema = new mongoose.Schema({
 
 // USER PROBLEM (to track user progress on problems)
 const user_problem_schema = new mongoose.Schema({
-   //  id: { type: String, required: true },
     userId: { type: String, required: true, unique: true },
     problemIds: { type: [String], default: [] }
 });
