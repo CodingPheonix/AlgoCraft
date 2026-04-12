@@ -6,7 +6,7 @@ import { Problem } from "../mongodb/mongo_schema"
 export const insertProblemVisuals = async ({ problemId, codeText, codeSteps, inputArray }: {
     problemId: string,
     codeText: string,
-    codeSteps: VisualizerAction[],
+    codeSteps: string,
     inputArray: string
 }) => {
     try {
@@ -26,7 +26,7 @@ export const insertProblemVisuals = async ({ problemId, codeText, codeSteps, inp
                 $set: {
                     visuals: {
                         code_text: codeText,
-                        code_steps: codeSteps.toString(),
+                        code_steps: codeSteps,
                         input_array: inputArray
                     }
                 }

@@ -122,6 +122,8 @@ const ArrayAnimators: React.FC<ArrayAnimatorsProps> = ({ onSubmit, topic, proble
     const handleAlgorithmUpload = () => {
         if (!problemId || !code || !algoSteps || !arrayInput) return;
 
+        console.log(JSON.stringify(algoSteps))
+
         onSubmit(problemId, code, algoSteps, arrayInput);
         toast("Algorithm Visual Uploaded")
     }

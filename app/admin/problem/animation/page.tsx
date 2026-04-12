@@ -28,7 +28,7 @@ const Animation = () => {
   const problemId = searchParams.get('id') as string;
 
   const handleSubmit = async (problemId: string, code: string, algoSteps: VisualizerAction[], arrayInput: string) => {
-    await insertProblemVisuals({problemId, codeText: code, codeSteps: algoSteps, inputArray: arrayInput})
+    await insertProblemVisuals({problemId, codeText: code, codeSteps: JSON.stringify(algoSteps), inputArray: arrayInput})
   }
 
   useEffect(() => {
