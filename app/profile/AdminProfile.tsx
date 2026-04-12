@@ -14,21 +14,6 @@ import { toast } from "sonner";
 import { getTotalProblemCount } from "../db/operations/problems";
 import { getTotalTutorialCount } from "../db/operations/tutorials";
 
-// interface Admin {
-//   id: string;
-//   username: string;
-//   email: string;
-//   role: UserRole;
-//   dateJoined: string;
-// }
-
-// const MOCK_ADMINS: User[] = [
-//   { id: "1", username: "root_admin", email: "root@algocraft.dev", role: "super_admin", dateJoined: "Oct 2024" },
-//   { id: "2", username: "mod_sarah", email: "sarah@algocraft.dev", role: "admin", dateJoined: "Dec 2024" },
-//   { id: "3", username: "mod_jake", email: "jake@algocraft.dev", role: "professor", dateJoined: "Jan 2025" },
-//   { id: "4", username: "mod_luna", email: "luna@algocraft.dev", role: "professor", dateJoined: "Feb 2025" },
-// ];
-
 type Stats = {
   totalUsers: number,
   tutorialsCreated: number,
@@ -57,7 +42,7 @@ const AdminProfile = ({ user }: {
   // State list
   const [activeTab, setActiveTab] = useState<"dashboard" | "admins" | "app_management" | "settings">("dashboard");
   const [admins, setAdmins] = useState<User[]>([]);
-  const [statusBar, setStatusBar] = useState<Stats>({totalofficials: 0, totalUsers: 0, problemsCreated: 0, tutorialsCreated: 0})
+  const [statusBar, setStatusBar] = useState<Stats>({ totalofficials: 0, totalUsers: 0, problemsCreated: 0, tutorialsCreated: 0 })
   const [searchQuery, setSearchQuery] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
   const [isAddingAdmin, setIsAddingAdmin] = useState(false);
@@ -104,7 +89,7 @@ const AdminProfile = ({ user }: {
   const handleRoleChange = async (id: string, role: UserRole) => {
     if (!id || !role) return;
 
-    isAddingAdmin ? setnewUser({ ...newUser, role: role }) : setAdmins(admins.map((admin, _) => admin.id === id ? {...admin, role: role} : admin));
+    isAddingAdmin ? setnewUser({ ...newUser, role: role }) : setAdmins(admins.map((admin, _) => admin.id === id ? { ...admin, role: role } : admin));
     await alterUserRole(id, role);
   }
 
@@ -112,16 +97,16 @@ const AdminProfile = ({ user }: {
     const fetchAdmins = async () => {
 
       const [users, problemCount, tutorialCount, totalUsers] = await Promise.all([
-        fetchAllAdmins(), 
-        getTotalProblemCount(), 
+        fetchAllAdmins(),
+        getTotalProblemCount(),
         getTotalTutorialCount(),
         getAllUsersCount()
       ])
-      
-      
+
+
       // console.log(users, problemCount, tutorialCount, totalUsers)
       if (!users) return;
-      
+
       setStatusBar({
         totalUsers: totalUsers || 0,
         problemsCreated: problemCount || 0,
@@ -163,7 +148,7 @@ const AdminProfile = ({ user }: {
                 </span>
               </div>
               <p className="text-sm text-slate-600">Manage your platform, users, and admin team.</p>
-              <div className="flex gap-4 mt-3 text-xs text-slate-600">
+              <div className="flex gap-4 mt-3 text-xs text-slate-600 md:flex-row flex-col">
                 <span className="flex items-center gap-1.5"><Crown size={13} className="text-orange-500" /> {user.role[0].toUpperCase() + user.role.substring(1).replace("_", " ")}</span>
                 <span className="flex items-center gap-1.5"><Mail size={13} /> {user.email}</span>
                 <span className="flex items-center gap-1.5"><Calendar size={13} /> Since {new Date(user.dateJoined).toLocaleString("default", { month: "short" })}{" "} {new Date(user.dateJoined).getFullYear()}</span>
@@ -173,7 +158,7 @@ const AdminProfile = ({ user }: {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 mb-6 border-b border-slate-500">
+        <div className="flex gap-1 mb-6 border-b border-slate-500 overflow-x-scroll overflow-y-clip">
           {(["dashboard", "admins", "app_management", "settings"] as const)
             .filter((tab) => user.role !== "professor" || tab !== "admins")
             .map((tab) => (
@@ -218,7 +203,7 @@ const AdminProfile = ({ user }: {
           <div className="space-y-4">
             {/* Toolbar */}
             <div className="flex flex-col sm:flex-row gap-3 justify-between">
-              <div className="relative flex-1 max-w-xs">
+              <div className="relative flex-1 md:max-w-xs w-full">
                 <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-600" />
                 <input
                   type="text"
@@ -230,23 +215,23 @@ const AdminProfile = ({ user }: {
               </div>
               <button
                 onClick={handleSearchCandidate}
-                className="h-9 px-4 rounded-lg bg-blue-500 text-white font-mono text-xs font-semibold hover:bg-blue-500/90 transition-colors flex items-center gap-2 shrink-0"
+                className="h-9 px-4 rounded-lg bg-blue-500 text-white font-mono text-xs font-semibold hover:bg-blue-500/90 transition-colors flex items-center text-center gap-2 shrink-0"
               >
                 <Plus size={15} /> Search
               </button>
             </div>
 
             {/* Admin Table */}
-            <div className="rounded-xl border border-slate-500 bg-card overflow-hidden">
-              <table className="w-full text-sm">
+            <div className="rounded-xl border border-slate-500 bg-card overflow-x-scroll">
+              <table className="w-full text-sm overflow-x-scroll">
                 <thead>
-                  <tr className="border-b border-slate-500">
-                    <th className="text-left px-5 py-3 text-xs font-medium text-slate-600">User</th>
-                    <th className="text-left px-5 py-3 text-xs font-medium text-slate-600 hidden md:table-cell">Role</th>
-                    <th className="text-left px-5 py-3 text-xs font-medium text-slate-600 hidden lg:table-cell">Added</th>
+                  <tr className="border-b border-slate-500 ">
+                    <th className="text-left px-5 py-3 min-w-40 text-xs font-medium text-slate-600">User</th>
+                    <th className="text-left px-5 py-3 min-w-40 text-xs font-medium text-slate-600">Role</th>
+                    <th className="text-left px-5 py-3 min-w-40 text-xs font-medium text-slate-600">Added</th>
                     {/* <th className="text-left px-5 py-3 text-xs font-medium text-slate-600 hidden sm:table-cell">Last Active</th>
                     <th className="text-left px-5 py-3 text-xs font-medium text-slate-600">Status</th> */}
-                    <th className="text-left px-5 py-3 text-xs font-medium text-slate-600">Actions</th>
+                    <th className="text-left px-5 py-3 min-w-40 text-xs font-medium text-slate-600">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -258,12 +243,12 @@ const AdminProfile = ({ user }: {
                           <p className="text-xs text-slate-600">{admin.email}</p>
                         </div>
                       </td>
-                      <td className="px-5 py-3 hidden md:table-cell">
+                      <td className="px-5 py-3 ">
                         <span className={`px-2 py-0.5 rounded-full text-xs font-semibold border ${ROLE_STYLES[admin.role]}`}>
                           {admin.role.replace("_", " ")}
                         </span>
                       </td>
-                      <td className="px-5 py-3 text-slate-600 hidden lg:table-cell">{admin.dateJoined.toLocaleDateString()}</td>
+                      <td className="px-5 py-3 text-slate-600">{admin.dateJoined.toLocaleDateString()}</td>
                       <td>
                         {admin.role !== "super_admin" && (
                           <select
@@ -316,7 +301,10 @@ const AdminProfile = ({ user }: {
 
             {APP_MANAGEMENT_SECTIONS.map((section, index) => {
               return (
-                <button key={index} onClick={() => router.push(`${section.path}?u=${user?.id}`)} className="px-4 py-2 h-32 w-43 rounded-lg border border-blue-500 bg-blue-500/70 text-white font-semibold hover:text-blue-500 transition-colors">
+                <button
+                  key={index}
+                  onClick={() => router.push(`${section.path}?u=${user?.id}`)}
+                  className="px-4 py-2 h-32 md:w-43 w-[90%] mx-auto rounded-lg border border-blue-500 bg-blue-500/70 text-white font-semibold hover:text-blue-500 transition-colors">
                   {section.name}
                 </button>
               )
