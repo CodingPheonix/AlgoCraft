@@ -79,10 +79,6 @@ const tutorials_schema = new mongoose.Schema({
 
 // ALGOVISUALS
 const algovisuals_schema = new mongoose.Schema({
-   //  id: { type: String, required: true },
-
-    subtopicId: String,
-
     code_text: { type: String, default: "" },
     code_steps: { type: String, default: "[]" },
     input_array: { type: String, default: "[]" }
@@ -90,12 +86,8 @@ const algovisuals_schema = new mongoose.Schema({
 
 // TOPICS
 const topics_schema = new mongoose.Schema({
-   //  id: { type: String, required: true },
-    title: String,
-    content: String,
-
-    subtopicId: { type: String},
-
+    title: { type: String, default: "" },
+    content: { type: String, default: "" },
     commentIds: { type: [String], default: [] }
 });
 
@@ -105,10 +97,8 @@ const subtopic_schema = new mongoose.Schema({
     description: String,
     difficulty: { type: String, default: "Easy" },
     external_video: String,
-
     topics: {type: topics_schema, default: {}},
     algovisuals: {type: algovisuals_schema, default: {}},
-
     tutorialId: { type: String, required: true },
 });
 

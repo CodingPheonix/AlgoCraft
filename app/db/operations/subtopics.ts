@@ -20,6 +20,8 @@ export const addSubTopic = async (subTopic: SubTopic, tutorialId: string): Promi
             description: subTopic.description,
             difficulty: subTopic.difficulty,
             external_video: subTopic.external_video,
+            topics: {},
+            algovisuals: {},
             tutorialId,
         })
 
