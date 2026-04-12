@@ -199,12 +199,14 @@ const SetProblems = () => {
     );
 
     // await deleteSetProblem(problemId);
-    await deleteProblemDescription(problemId);
-    await deleteProblemVisuals(problemId);
-    await removeProblem(problemId);
+    // await deleteProblemDescription(problemId);
+    // await deleteProblemVisuals(problemId);
+    await removeProblem(problemId, setId as string);
 
     setId && toast("Problem deleted!");
   };
+
+  console.log(sets)
 
   const difficultyColor = (d: string) => {
     switch (d) {

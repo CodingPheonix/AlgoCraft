@@ -69,11 +69,10 @@ export const updateProblem = async (problem: Problem) => {
     }
 }
 
-export const removeProblem = async (problemId: string) => {
+export const removeProblem = async (problemId: string, setId: string) => {
     try {
-        // await db
-        //     .delete(problemTable)
-        //     .where(eq(problemTable.id, problemId))
+
+        await Set.findOneAndUpdate({ _id: setId }, { $pull: { problemIds: problemId } })
 
         await ProblemModel.deleteOne({ _id: problemId })
     } catch (error) {
