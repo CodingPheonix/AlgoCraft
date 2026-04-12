@@ -104,6 +104,22 @@ export const getTotalProblemCount = async () => {
     }
 }
 
+export const fetchProblemWithId = async (problemId: string) => {
+    try {
+        const data = await ProblemModel.findById(problemId).lean();
+        return {
+            name: data?.name || "",
+            visuals: {
+                code_text: data?.visuals?.code_text || "",
+                code_steps: data?.visuals?.code_steps || "",
+                input_array: data?.visuals?.input_array || ""
+            }
+        }
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 export const fetchAllSetProblemWithSolutionAndAnimations = async () => {
     try {
         const sets = await Set.find().lean()
