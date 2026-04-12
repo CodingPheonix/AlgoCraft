@@ -52,9 +52,12 @@ export const fetchVisuals = async (subTopicId: string) => {
         const algoviz = subtopic?.algovisuals
 
         return {
-            code: algoviz?.code_text,
-            steps: algoviz?.code_steps,
-            inputArray: algoviz?.input_array
+            name: subtopic?.name || "",
+            data: {
+                code: algoviz?.code_text,
+                steps: algoviz?.code_steps,
+                inputArray: algoviz?.input_array
+            }
         }
     } catch (error) {
         console.error(error)
