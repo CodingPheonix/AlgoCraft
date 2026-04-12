@@ -1,69 +1,12 @@
 "use client"
 
-import { VisualizerAction } from "@/app/admin/visual/create/tools"
-import ArrayAnimatorsDisplay from "@/app/components/animators/ArrayAnimatorsDisplay"
-import { Problem } from "@/app/db/mongodb/mongo_schema"
-import { fetchProblemWithId } from "@/app/db/operations/problems"
-import { useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react"
+import { Suspense } from "react"
+import Client from "./Client"
 
-
-type PrevData = {
-    codetext: string;
-    inputArray: string;
-    actionSteps: VisualizerAction[]
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Client />
+    </Suspense>
+  )
 }
-
-type ProblemData = {
-    name: string;
-    visuals: {
-        code_text: string;
-        code_steps: string;
-        input_array: string;
-    }
-}
-
-const page = () => {
-
-    // // Refs
-    // const prevDataRef = useRef<PrevData | null>(null)
-    // const topicRef = useRef<string>("")
-    const searchParams = useSearchParams()
-    const problemId = searchParams.get('id') as string
-
-    // State
-    const [prevData, setPrevData] = useState<PrevData | null>(null);
-    const [topic, setTopic] = useState<string>("");
-
-    // UseEffects
-    useEffect(() => {
-        const fetchData = async () => {
-            const prevData = await fetchProblemWithId(problemId) as ProblemData | null;
-
-            if (prevData) {
-                setPrevData({
-                    codetext: prevData.visuals.code_text,
-                    actionSteps: JSON.parse(prevData.visuals.code_steps) as VisualizerAction[],
-                    inputArray: prevData.visuals.input_array,
-                });
-                setTopic(prevData.name);
-            }
-
-            // prevDataRef.current = prevData as PrevData | null
-        }
-        fetchData()
-    }, [problemId])
-
-    // console.log(prevDataRef.current)
-
-    return (
-        <div>
-            <ArrayAnimatorsDisplay
-                topic={topic}
-                prevData={prevData as PrevData}
-            />
-        </div>
-    )
-}
-
-export default page

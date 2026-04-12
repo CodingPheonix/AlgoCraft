@@ -1,10 +1,8 @@
 'use client'
 
-import { useState, useRef, useCallback, useEffect, Suspense } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { ArrowLeft, Play, Pause, RotateCcw, SkipForward, ChevronDown, ChevronUp, Copy } from "lucide-react";
 import { toast, Toaster } from "sonner";
-import { fetchVisuals, insertVisuals } from "@/app/db/operations/algoVisuals";
-import { useSearchParams } from "next/navigation";
 import { mapping } from "@/app/admin/visual/create/functions";
 import { VisualizerAction, ActionColors, getInstruction } from "@/app/admin/visual/create/tools";
 
@@ -38,8 +36,6 @@ const ArrayAnimatorsDisplay: React.FC<ArrayAnimatorsProps> = ({ topic, prevData 
 
     // Use refs
     const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-    const searchParams = useSearchParams()
-    const problemId = searchParams.get('id')
 
     const displayValues = currentArray;
     const maxVal = Math.max(...displayValues.map(values => values.value), 1);
@@ -161,7 +157,7 @@ const ArrayAnimatorsDisplay: React.FC<ArrayAnimatorsProps> = ({ topic, prevData 
         }
 
         fetchDetails()
-    }, [problemId, prevData])
+    }, [prevData])
 
     const codeLines = code.split("\n");
 
