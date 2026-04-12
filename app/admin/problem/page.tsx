@@ -47,7 +47,7 @@ const SetProblems = () => {
   const { user } = useUserContext()
 
   // Functions
-  const createSet = () => {
+  const createSet = async () => {
     if (!newSetName.trim()) return;
 
     const newSet: ProblemSet = {
@@ -57,12 +57,12 @@ const SetProblems = () => {
       isExpanded: true,
     };
 
-    insertSet(newSet.name, user.id);
+    const data = await insertSet(newSet.name, user.id);
 
-    setSets((prev) => [...prev, newSet]);
+    setSets((prev) => [...prev, { ...newSet, id: data?.id || newSet.id }]);
     setFormState((prev) => ({
       ...prev,
-      [newSet.id]: { name: "", link: "", difficulty: "Easy", videoLink: "", showForm: false },
+      [data?.id as string]: { name: "", link: "", difficulty: "Easy", videoLink: "", showForm: false },
     }));
 
     setNewSetName("");

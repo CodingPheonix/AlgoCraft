@@ -14,11 +14,17 @@ type Set = {
 
 export const insertSet = async (name: string, author_id: string, id?: string) => {
     try {
-        await Set.create({
+        const data = await Set.create({
             name,
             authorId: author_id,
             problemIds: []
         })
+
+        return {
+            id: data._id.toString() as string,
+            name: data.name as string,
+            problems: data.problemIds as string[]
+        }
     } catch (error) {
         console.error(error)
     }

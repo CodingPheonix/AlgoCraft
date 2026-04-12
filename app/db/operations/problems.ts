@@ -5,16 +5,16 @@ import { Set, Problem as ProblemModel } from "../mongodb/mongo_schema"
 import { Difficulty } from "@/app/utils/type";
 
 export type ProblemSchema = {
-  _id: string
-  name: string
-  link: string
-  difficulty: Difficulty
-  video_link?: string | null
-  visuals?: object
-  description?: object
-  authorId: string
-  setId: string
-  hints?: string[]
+    _id: string
+    name: string
+    link: string
+    difficulty: Difficulty
+    video_link?: string | null
+    visuals?: object
+    description?: object
+    authorId: string
+    setId: string
+    hints?: string[]
 }
 
 export type SetWithProblems = {
@@ -24,6 +24,7 @@ export type SetWithProblems = {
 }
 
 export const insertProblem = async (problem: Problem, authorId: string, setId: string) => {
+    console.log(problem, authorId, setId)
     try {
         const data = await ProblemModel.create({
             name: problem.name,
@@ -34,7 +35,7 @@ export const insertProblem = async (problem: Problem, authorId: string, setId: s
             setId
         })
 
-        await Set.findOneAndUpdate({ _id: setId }, {
+        await Set.findByIdAndUpdate(setId, {
             $push: { problemIds: data._id }
         })
     } catch (error) {
