@@ -86,7 +86,7 @@ const Client = () => {
                     </div>
                 </div>
 
-                <div className='w-full mx-auto my-2 h-auto bg-white text-gray-400 p-3 rounded-t-lg font-mono text-start border border-blue-500 rounded-xl'>
+                <div className='md:block hidden w-full mx-auto my-2 h-auto bg-white text-gray-400 p-3 rounded-t-lg font-mono text-start border border-blue-500 rounded-xl'>
                     <div className='w-[90%] mx-auto flex'>
                         <p className="w-1/4">Heading</p>
                         <p className="w-1/4">Description</p>
@@ -101,7 +101,7 @@ const Client = () => {
                         {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4"> */}
                         <div className="flex flex-col mt-4 mb-3 w-[90%] mx-auto gap-4">
                             {section?.subtopics.length > 0 ? section.subtopics.map((item, index) => (
-                                <div key={index} className="text-black p-4 rounded-lg border border-gray-700 flex justify-around items-center">
+                                <div key={index} className="text-black md:p-4 rounded-lg border border-gray-700 flex justify-around items-center">
                                     <AlgoCard {...item} />
                                 </div>
                             )) : (

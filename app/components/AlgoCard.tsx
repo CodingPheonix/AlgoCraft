@@ -32,11 +32,15 @@ const AlgoCard = (item: CourseItem) => {
     }, []);
 
     return (
-        <div className='flex w-full justify-around items-center'>
+        <div className='flex md:flex-row flex-col w-full justify-around items-center md:gap-0 gap-2 rounded-lg'>
             <Toaster />
 
-            <h3 className="text-lg font-semibold w-1/4 text-start">{item.name}</h3>
-            <p className="text-sm mt-2 w-1/4 text-start">{item.description}</p>
+            <h3 className="text-lg font-semibold md:w-1/4 w-full text-center md:text-start">{item.name}</h3>
+
+            {/* divider */}
+            <span className='w-full h-[0.5px] bg-black md:hidden block'></span>
+
+            <p className="text-sm md:mt-2 w-1/4 text-start md:block hidden">{item.description}</p>
             <span className='w-1/4 flex justify-center items-center'>
                 <span className={`inline-block px-2 py-1 text-md rounded-full font-semibold mt-2 ${item.difficulty === "Easy" ? "text-green-500" :
                     item.difficulty === "Normal" ? "text-yellow-500 " :
@@ -45,8 +49,12 @@ const AlgoCard = (item: CourseItem) => {
                     {item.difficulty}
                 </span>
             </span>
+
+            {/* divider */}
+            <span className='w-full h-[0.5px] bg-black md:hidden block'></span>
+            
             <span className='flex w-1/4 justify-center items-center gap-3'>
-                <button onClick={() => {router.push(`/learn/topic?id=${item.id}`)}} className="text-black hover:text-blue-600 px-3 py-1 rounded mr-2 hover:cursor-pointer">
+                <button onClick={() => { router.push(`/learn/topic?id=${item.id}`) }} className="text-black hover:text-blue-600 px-3 py-1 rounded mr-2 hover:cursor-pointer">
                     <FileSpreadsheet className="w-4 h-4" />
                 </button>
                 <button onClick={() => { router.push(`/learn/tutorial?id=${item.id}`) }} className=" text-black hover:text-yellow-500 px-3 py-2 rounded hover:cursor-pointer">
