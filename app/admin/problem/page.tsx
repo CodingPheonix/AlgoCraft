@@ -248,7 +248,7 @@ const SetProblems = () => {
 
       {/* Header */}
       <div className="border-b border-border bg-blue-500 text-white mt-16">
-        <div className="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
+        <div className={`max-w-6xl mx-auto px-6 py-5 flex md:flex-row flex-col gap-3 items-center justify-between`}>
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Problem Sets</h1>
             <p className="text-sm text-blue-300bg-blue-300-foreground mt-1">
@@ -264,7 +264,7 @@ const SetProblems = () => {
               Create Set
             </button>
           ) : (
-            <div className="flex items-center gap-2">
+            <div className="flex md:flex-row flex-col items-center gap-2">
               <input
                 placeholder="Set name (e.g. Arrays, Trees)"
                 value={newSetName}
@@ -275,13 +275,13 @@ const SetProblems = () => {
               />
               <button
                 onClick={createSet}
-                className="px-3 py-1.5 rounded-md bg-white text-blue-500 text-sm font-medium hover:text-blue-600  transition-colors"
+                className="px-3 md:w-auto w-full py-1.5 rounded-md bg-white text-blue-500 text-sm font-medium hover:text-blue-600  transition-colors"
               >
                 Create
               </button>
               <button
                 onClick={() => { setShowCreateSet(false); setNewSetName(""); }}
-                className="px-3 py-1.5 rounded-md text-sm hover:bg-white hover:text-blue-600 transition-colors"
+                className="px-3 md:w-auto w-full py-1.5 rounded-md text-sm hover:bg-white hover:text-blue-600 transition-colors"
               >
                 Cancel
               </button>
@@ -314,7 +314,7 @@ const SetProblems = () => {
                   <ChevronRight className="h-5 w-5 text-blue-300bg-blue-300-foreground" />
                 )}
                 <h3 className="text-lg font-semibold">{set.name}</h3>
-                <span className="text-xs text-blue-300bg-blue-300-foreground bg-blue-300 px-2 py-0.5 rounded-full">
+                <span className="text-xs md:block hidden text-blue-300bg-blue-300-foreground bg-blue-300 px-2 py-0.5 rounded-full">
                   {set.problems.length} problem{set.problems.length !== 1 ? "s" : ""}
                 </span>
               </div>
@@ -324,7 +324,7 @@ const SetProblems = () => {
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white text-sm font-medium hover:text-blue-600 transition-colors"
                 >
                   <Plus className="h-3.5 w-3.5" />
-                  Add Problem
+                  <span className="md:block hidden">Add Problem</span>
                 </button>
                 <button
                   onClick={() => deleteSet(set.id)}
