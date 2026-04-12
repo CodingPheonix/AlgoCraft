@@ -294,7 +294,7 @@ const AdminProfile = ({ user }: {
 
         {/* App Management  */}
         {activeTab === "app_management" && (
-          <div className="flex gap-3 flex-wrap">
+          <div className="flex flex-wrap items-start gap-6">
             {/* <button onClick={() => router.push(`/admin/tutorial?u=${user?.id}`)} className="px-4 py-2 h-32 w-43 rounded-lg border border-blue-500 bg-blue-500/70 text-white font-semibold hover:text-blue-500 transition-colors">
               Tutorial Management
             </button> */}
@@ -304,7 +304,7 @@ const AdminProfile = ({ user }: {
                 <button
                   key={index}
                   onClick={() => router.push(`${section.path}?u=${user?.id}`)}
-                  className="px-4 py-2 h-32 md:w-43 w-[90%] md:mx-auto rounded-lg border border-blue-500 bg-blue-500/70 text-white font-semibold hover:text-blue-500 transition-colors">
+                  className="px-4 py-2 h-32 min-w-[220px] md:w-43 rounded-lg border border-blue-500 bg-blue-500/70 text-white font-semibold hover:text-blue-500 transition-colors">
                   {section.name}
                 </button>
               )
