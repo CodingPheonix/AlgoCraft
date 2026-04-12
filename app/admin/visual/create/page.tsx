@@ -161,15 +161,15 @@ const Visualizer = () => {
             const fetchData = await fetchVisuals(subtopicId);
 
             if (!fetchData) return;
-            setArrayInput(fetchData?.inputArray || "")
-            setTextValue(fetchData?.steps)
-            // setTextValue(JSON.stringify(fetchData?.steps || []))
-            const parsed = JSON.parse(fetchData?.steps || {});
+            setArrayInput(fetchData?.data.inputArray || "")
+            setTextValue(fetchData?.data.steps)
+            // setTextValue(JSON.stringify(fetchData?.data.steps || []))
+            const parsed = JSON.parse(fetchData?.data.steps || {});
             console.log("Fetched steps:", parsed)
-            // const parsed = JSON.parse(JSON.stringify(fetchData?.steps || {}));
+            // const parsed = JSON.parse(JSON.stringify(fetchData?.data.steps || {}));
             setAlgoSteps(parsed || []);
-            setCode(fetchData?.code || "")
-            syncArray(fetchData?.inputArray || "")
+            setCode(fetchData?.data.code || "")
+            syncArray(fetchData?.data.inputArray || "")
 
             console.log(algoSteps)
         }
