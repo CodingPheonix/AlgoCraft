@@ -32,7 +32,7 @@ const AlgoCard = (item: CourseItem) => {
     }, []);
 
     return (
-        <div className='flex md:flex-row flex-col w-full justify-around items-center md:gap-0 gap-2 rounded-lg'>
+        <div id={item.name.toLowerCase().replace(" ", "_")} className='flex md:flex-row flex-col w-full justify-around items-center md:gap-0 gap-2 rounded-lg'>
             <Toaster />
 
             <h3 className="text-lg font-semibold md:w-1/4 w-full text-center md:text-start">{item.name}</h3>

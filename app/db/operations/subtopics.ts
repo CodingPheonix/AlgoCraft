@@ -171,3 +171,13 @@ export const deleteTopic = async (topicId: string) => {
     // Delete the tutorial itself
     await Tutorials.findByIdAndDelete(topicId)
 };
+
+export const getAllSubtopics = async () => {
+    try {
+        const subtopics = await Subtopic.find().lean()
+        return subtopics.map((subtopic, _) => { return subtopic.name as string })
+    } catch (error) {
+        console.error("Error fetching all subtopics:", error);
+        throw error;
+    }
+}

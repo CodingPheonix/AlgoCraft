@@ -141,15 +141,19 @@
 
 import { Search, Flame, Globe, LogIn, UserPlus, Menu, X } from "lucide-react";
 import { CiYoutube } from "react-icons/ci";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useUserContext } from "../context/userContext";
 import { logout } from "../actions/auth";
 import { useRouter } from "next/navigation";
+import { getAllSubtopics } from "../db/operations/subtopics";
 
 const Navbar = () => {
+    const navRef = useRef<HTMLElement | null>(null);
     const [searchOpen, setSearchOpen] = useState(false);
+    const [searchValue, setSearchValue] = useState<string>("");
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [subTopicList, setSubTopicList] = useState<string[]>([]);
 
     const router = useRouter();
     const UserContext = useUserContext();
@@ -165,8 +169,37 @@ const Navbar = () => {
         </>
     );
 
+    useEffect(() => {
+        const fetchAllSubtopics = async () => {
+            const allSutopics = await getAllSubtopics();
+            setSubTopicList(allSutopics)
+        }
+        fetchAllSubtopics();
+    }, [])
+
+    useEffect(() => {
+        const handleDocumentClick = (event: MouseEvent) => {
+            const target = event.target as Node;
+            if (searchOpen && navRef.current && !navRef.current.contains(target)) {
+                setSearchOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleDocumentClick);
+        return () => {
+            document.removeEventListener("mousedown", handleDocumentClick);
+        };
+    }, [searchOpen]);
+
+    const filteredSubtopics = subTopicList.filter((subtopic) =>
+        subtopic.toLowerCase().includes(searchValue.toLowerCase())
+    );
+
+    console.log(filteredSubtopics)
+    console.log(subTopicList)
+
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-white text-black backdrop-blur-xl">
+        <nav ref={navRef} className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-white text-black backdrop-blur-xl">
             <div className="container mx-auto flex h-16 items-center justify-between px-4">
 
                 {/* Logo */}
@@ -198,10 +231,22 @@ const Navbar = () => {
                         <input
                             type="text"
                             placeholder="Search..."
-                            className={`h-9 w-full rounded-lg border pl-8 pr-3 text-sm transition-all ${
-                                searchOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-                            }`}
+                            value={searchValue}
+                            onChange={(e) => setSearchValue(e.target.value)}
+                            className={`h-9 w-full rounded-lg border pl-8 pr-3 text-sm transition-all ${searchOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+                                }`}
                         />
+                        <div className={`absolute top-full ${searchOpen ? "block" : "hidden"} min-w-[20vw] left-0 mt-2 w-full bg-white shadow-lg rounded-md`}>
+                            <div className="p-2 text-sm text-muted-foreground">
+                                {filteredSubtopics.length > 0
+                                    ? filteredSubtopics.map((sub, idx) => (
+                                        <div key={idx} onClick={() => {router.push(`/learn#${sub.toLowerCase().replace(" ", "_")}`)}} className="px-2 py-1 hover:bg-slate-100 cursor-pointer">
+                                            {sub}
+                                        </div>
+                                    ))
+                                    : "No results found"}
+                            </div>
+                        </div>
                     </div>
 
                     {/* Icons (hidden on very small screens optionally) */}
